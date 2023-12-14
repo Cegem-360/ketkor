@@ -72,6 +72,8 @@ class ProductController extends Controller
                     'street' => $request->street,
                     'zip' => $request->zip,
                     'tool_id' => $request->tool_id,
+                    'MAC' => '',
+                    'access_to_wifi' => false,
                 ]
             );
             Log::create([
@@ -149,8 +151,7 @@ class ProductController extends Controller
                 'tool_id' => 'required',
                 'user_ids' => 'required',
             ]);
-            // Validate Request
-            $product = Product::whereId($product->id)->first();
+            //$product = Product::whereId($product->id)->first();
             $product->update([
                 'serial_number' => $request->serial_number,
                 'installation_date' => $request->installation_date,
@@ -161,6 +162,8 @@ class ProductController extends Controller
                 'street' => $request->street,
                 'zip' => $request->zip,
                 'tool_id' => $request->tool_id,
+                'mac' => $request->mac,
+                'access_to_wifi' => filter_var($request->access_to_wifi, FILTER_VALIDATE_BOOLEAN),
             ]);
             $product->users()->sync($request->user_ids);
             Log::create([

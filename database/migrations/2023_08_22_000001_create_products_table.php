@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->date('installation_date')->nullable();
             $table->date('warrantee_date')->nullable();
             $table->date('purchase_date')->nullable();
+            $table->string('mac')->nullable();
+            $table->boolean('access_to_wifi')->nullable()->default(false);
             $table->foreignIdFor(Tool::class);
             $table->timestamps();
         });

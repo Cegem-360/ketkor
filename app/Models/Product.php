@@ -30,6 +30,8 @@ class Product extends Model
         'tool_id',
         'user_id',
         'comments',
+        'mac',
+        'access_to_wifi',
         'created_at',
     ];
     protected $dateFormat = 'Y-m-d';

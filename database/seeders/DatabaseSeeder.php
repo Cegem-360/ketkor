@@ -9,18 +9,12 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Visible;
 use Illuminate\Support\Str;
-use App\Imports\LEBTORImport;
-use App\Imports\ProductsImport;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
-use App\Imports\AccorroniProducts;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\FerroliProductsImport;
 use Database\Seeders\SimeProductSeeder;
 use Spatie\Permission\Models\Permission;
 use Database\Seeders\AccorroniProductsSeeder;
-use Maatwebsite\Excel\Excel as ExcelExtension;
 
 class DatabaseSeeder extends Seeder
 {
@@ -63,14 +57,14 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name' => 'Admin',
             'email' => 'zoli.szabok@gamil.com',
-            'email_verified_at' => now(),
+            'email_verified_at' => Carbon::now(),
             'password' => '1234',
             'remember_token' => Str::random(10),
         ]);
         $user1 = User::factory()->create([
             'name' => 'Test User',
             'email' => 'admin@admin.com',
-            'email_verified_at' => now(),
+            'email_verified_at' => Carbon::now(),
             'password' => '1234',
             'remember_token' => Str::random(10),
             'organization_id' => 1
@@ -78,7 +72,7 @@ class DatabaseSeeder extends Seeder
         $user2 = User::factory()->create([
             'name' => 'Test User 2',
             'email' => 'test@test2.com',
-            'email_verified_at' => now(),
+            'email_verified_at' => Carbon::now(),
             'password' => '1234',
             'remember_token' => Str::random(10),
             'organization_id' => 1
@@ -86,7 +80,7 @@ class DatabaseSeeder extends Seeder
         $user3 = User::factory()->create([
             'name' => 'Test User 3',
             'email' => 'test@test3.com',
-            'email_verified_at' => now(),
+            'email_verified_at' => Carbon::now(),
             'password' => '1234',
             'remember_token' => Str::random(10),
             'organization_id' => 1

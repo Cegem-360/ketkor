@@ -27,6 +27,10 @@
                                 <div class="mb-4">
                                     <x-create-input-text name="serial_number"
                                         headText="Serial number"></x-create-input-text>
+                                    <x-create-input-text name="mac" headText="MAC"></x-create-input-text>
+                                    <x-radio name="access_to_wifi" headText="Access to wifi" :required="false">
+                                        True,False
+                                    </x-radio>
                                     <x-create-input-text name="owner_name" headText="Owner name"></x-create-input-text>
                                     <x-create-input-text name="city" headText="City"
                                         :required="false"></x-create-input-text>

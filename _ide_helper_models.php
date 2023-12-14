@@ -134,12 +134,14 @@ namespace App\Models{
  * @property string|null $purchase_place
  * @property string $serial_number
  * @property string|null $comments
- * @property \Illuminate\Support\Carbon $installation_date
+ * @property \Illuminate\Support\Carbon|null $installation_date
  * @property \Illuminate\Support\Carbon|null $warrantee_date
  * @property \Illuminate\Support\Carbon|null $purchase_date
+ * @property string|null $mac
+ * @property int|null $access_to_wifi
+ * @property int $tool_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $tool_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Visible> $are_visible
  * @property-read int|null $are_visible_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Organization> $organizations
@@ -155,12 +157,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereAccessToWifi($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereComments($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereInstallationDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereInstallerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereMac($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereOwnerName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product wherePurchaseDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product wherePurchasePlace($value)

@@ -41,10 +41,12 @@
                                         <x-create-input-text name="city" headText="City" :type="!$userVisibility ?? 'hidden'">
                                             {{ $product->city }}
                                         </x-create-input-text>
+
                                         <x-create-input-text name="street" headText="Street" :type="!$userVisibility ?? 'hidden'"
                                             :required="false">
                                             {{ $product->street }}
                                         </x-create-input-text>
+
                                         <x-create-input-text name="zip" headText="Zip" :type="!$userVisibility ?? 'hidden'"
                                             :required="false">
                                             {{ $product->zip }}
@@ -54,6 +56,13 @@
                                         <x-create-input-text name="serial_number" headText="Serial number">
                                             {{ $product->serial_number }}
                                         </x-create-input-text>
+                                        <x-create-input-text name="mac" headText="MAC" :required="false">
+                                            {{ $product->mac }}
+                                        </x-create-input-text>
+                                        <x-radio name="access_to_wifi" headText="Access to wifi" :required="false"
+                                            :product="$product">
+                                            True,False
+                                        </x-radio>
                                         <x-create-input-text name="city" headText="City" :disabled="!$userVisibility"
                                             :required="false">
                                             {{ $product->city }}
