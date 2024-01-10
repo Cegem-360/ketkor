@@ -41,7 +41,7 @@ class AccessTokenController extends Controller
         $accessToken->update(['token' => $token, 'used' => false]);
         $accessToken->save();
         $user = auth()->user();
-        Mail::to('zoli.szabok@gmail.com')->cc($admin)->send(new AccessGrantMail($token, $user->name));
+        Mail::to('cegem360@gamil.com')->cc($admin)->send(new AccessGrantMail($token, $user->name));
         return redirect()->route('products.myproducts')->with('success', __('Succesfuly send an email to administrator who will grant an access to private datas, please wait until is access in grant.'));
     }
 

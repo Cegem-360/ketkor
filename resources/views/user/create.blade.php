@@ -26,6 +26,7 @@
                                 <div class="mb-4">
                                     <x-create-input-text name="name" headText="User name" />
                                     <x-create-input-text name="email" type="email" headText="Email" />
+                                    <x-create-input-text name="password" type="password" headText="Password" />
                                     <x-select-input name="organization_id" headText="Organization">
                                         @foreach ($organizations as $organization)
                                             <x-select-input-option :value="$organization->id">

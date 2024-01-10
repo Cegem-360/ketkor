@@ -67,11 +67,10 @@ final class UserAdminTable extends PowerGridComponent
         $this->redirect(route('users.index'), true);
 
     }
+    public string $primaryKey = 'users.id';
     public function datasource(): Builder
     {
-        return User::query()->join('organizations', function ($organizations) {
-            $organizations->on('users.organization_id', '=', 'organizations.id');
-        });
+        return User::with('organization');
     }
 
     public function relationSearch(): array
@@ -83,16 +82,18 @@ final class UserAdminTable extends PowerGridComponent
     {
         return PowerGrid::columns()
             ->addColumn('id')
-            ->addColumn('name')
+            ->addColumn('name', fn(User $model) => $model->name)
             ->addColumn('email')
-            ->addColumn('organization_name', fn(User $model) => $model->organization->name);
+            ->addColumn('organization_name', fn(User $model) => $model->organization()->first()->name);
     }
 
     public function columns(): array
     {
         return [
             Column::make('Id', 'id'),
-            Column::make(__('Name'), 'name')
+            Column::add()
+                ->title(__('Name'))
+                ->field('name', 'users.name')
                 ->sortable()
                 ->searchable(),
 

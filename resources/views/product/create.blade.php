@@ -3,9 +3,16 @@
 
         <!-- Page Heading -->
         <x-slot name="header">
-            <x-button-style-link text="Add product" route="products.index">
-                Back
-            </x-button-style-link>
+            @role('Admin|Operator')
+                <x-button-style-link text="Add product" route="products.index">
+                    Back
+                </x-button-style-link>
+            @endrole
+            @role('Organizer|Servicer')
+                <x-button-style-link text="Add product" route="products.myproducts">
+                    Back
+                </x-button-style-link>
+            @endrole
         </x-slot>
         {{-- Alert Messages --}}
         <x-alert />
@@ -27,7 +34,8 @@
                                 <div class="mb-4">
                                     <x-create-input-text name="serial_number"
                                         headText="Serial number"></x-create-input-text>
-                                    <x-create-input-text name="mac" headText="MAC"></x-create-input-text>
+                                    <x-create-input-text name="mac" headText="MAC"
+                                        :required="false"></x-create-input-text>
                                     <x-radio name="access_to_wifi" headText="Access to wifi" :required="false">
                                         True,False
                                     </x-radio>
@@ -57,43 +65,55 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="basis-full">
-                                        <label class="my-5 block text-left text-lg font-medium leading-6 text-gray-900"
-                                            for="installation_date"> <span
-                                                style="color:red;">*</span>{{ __('Installation date') }}</label>
-                                        <div class="mt-2">
-                                            <div
-                                                class="flex rounded-md shadow-sm focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                                                <input
-                                                    class="border @error('installation_date') border-l-danger-600 @enderror block w-full rounded border-0 p-2 py-1.5 text-2xl text-gray-900 shadow ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                    name="installation_date" type="date"
-                                                    value="{{ !empty(old('installation_date')) ? old('installation_date') : '' }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="basis-full">
-                                        <div class="col-span-full">
-                                            <label
-                                                class="my-5 block text-left text-lg font-medium leading-6 text-gray-900"
-                                                for="warrantee_date"> <span
-                                                    style="color:red;">*</span>{{ __('Warrantee date') }}</label>
+                                    @role('Admin|Operator')
+                                        <div class="basis-full">
+
+                                            <label class="my-5 block text-left text-lg font-medium leading-6 text-gray-900"
+                                                for="installation_date"> <span
+                                                    style="color:red;">*</span>{{ __('Installation date') }}</label>
                                             <div class="mt-2">
                                                 <div
                                                     class="flex rounded-md shadow-sm focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                                     <input
-                                                        class="border @error('warrantee_date') border-l-danger-600 @enderror block w-full rounded border-0 p-2 py-1.5 text-2xl text-gray-900 shadow ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                        name="warrantee_date" type="date"
-                                                        value="{{ !empty(old('warrantee_date')) ? old('warrantee_date') : '' }}">
+                                                        class="border @error('installation_date') border-l-danger-600 @enderror block w-full rounded border-0 p-2 py-1.5 text-2xl text-gray-900 shadow ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                        name="installation_date" type="date"
+                                                        value="{{ !empty(old('installation_date')) ? old('installation_date') : '' }}">
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <x-select-input name="user_id" headText="User">
-                                        @foreach ($users as $user)
-                                            <x-select-input-option value="{{ $user->id }}">
-                                                {{ $user->name }}
-                                            </x-select-input-option>
-                                        @endforeach
+                                        <div class="basis-full">
+
+                                            <div class="col-span-full">
+                                                <label
+                                                    class="my-5 block text-left text-lg font-medium leading-6 text-gray-900"
+                                                    for="warrantee_date"> <span
+                                                        style="color:red;">*</span>{{ __('Warrantee date') }}</label>
+                                                <div class="mt-2">
+                                                    <div
+                                                        class="flex rounded-md shadow-sm focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                                                        <input
+                                                            class="border @error('warrantee_date') border-l-danger-600 @enderror block w-full rounded border-0 p-2 py-1.5 text-2xl text-gray-900 shadow ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                            name="warrantee_date" type="date"
+                                                            value="{{ !empty(old('warrantee_date')) ? old('warrantee_date') : '' }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    @endrole
+                                    <x-select-input name="user_id" headText="Installer">
+                                        @role('Admin|Operator')
+                                            @foreach ($users as $user)
+                                                <x-select-input-option value="{{ $user->id }}">
+                                                    {{ $user->name }}
+                                                </x-select-input-option>
+                                            @endforeach
+                                        @endrole
+                                        @role('Organizer|Servicer')
+                                            <option value='{{ Auth::user()->id }}' selected>
+                                                {{ Auth::user()->name }}
+                                            </option>
+                                        @endrole
                                     </x-select-input>
                                     <x-select-input name="tool_id" headText="Tool">
                                         @foreach ($tools as $tool)

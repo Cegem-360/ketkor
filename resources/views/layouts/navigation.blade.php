@@ -38,6 +38,9 @@
                                 <x-nav-link :href="route('products.myproducts')" :active="request()->is('product/myproducts')">
                                     {{ __('My products') }}
                                 </x-nav-link>
+                                <x-nav-link :href="route('products.create')" :active="request()->is('products/create')">
+                                    {{ __('Device commissioning') }}
+                                </x-nav-link>
                             @endrole
                             @role('Organizer')
                                 <x-nav-link :href="route('organizations.myorganization')" :active="request()->is('organization/myorganization')">
@@ -80,15 +83,15 @@
                             </div>
 
                             <!--
-                                                                                                                                    Dropdown menu, show/hide based on menu state.
+                                                                                                                                                Dropdown menu, show/hide based on menu state.
 
-                                                                                                                                    Entering: "transition ease-out duration-100"
-                                                                                                                                        From: "transform opacity-0 scale-95"
-                                                                                                                                        To: "transform opacity-100 scale-100"
-                                                                                                                                    Leaving: "transition ease-in duration-75"
-                                                                                                                                        From: "transform opacity-100 scale-100"
-                                                                                                                                        To: "transform opacity-0 scale-95"
-                                                                                                                                    -->
+                                                                                                                                                Entering: "transition ease-out duration-100"
+                                                                                                                                                    From: "transform opacity-0 scale-95"
+                                                                                                                                                    To: "transform opacity-100 scale-100"
+                                                                                                                                                Leaving: "transition ease-in duration-75"
+                                                                                                                                                    From: "transform opacity-100 scale-100"
+                                                                                                                                                    To: "transform opacity-0 scale-95"
+                                                                                                                                                -->
 
                             <div class="ring-black absolute right-0 z-10 mt-2 hidden w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-opacity-5 focus:outline-none"
                                 id="profile-dropdown" role="menu" aria-orientation="vertical"

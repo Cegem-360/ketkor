@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AccessToken;
 use App\Models\Log;
 use App\Models\Tool;
 use App\Models\User;
@@ -10,9 +9,12 @@ use App\Models\Partial;
 use App\Models\Product;
 use App\Models\Visible;
 use App\Models\ProductLog;
+use App\Models\AccessToken;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -54,28 +56,55 @@ class ProductController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'serial_number' => 'required|string|max:200|unique:products,serial_number,except,id',
-                'purchase_date' => 'sometimes|nullable',
-                'installation_date' => 'sometimes|nullable',
+                'purchase_date' => ['required'],
                 'tool_id' => 'required',
                 'owner_name' => 'required',
             ]);
             $validator->validate();
-            $product = Product::create(
-                [
-                    'serial_number' => $request->serial_number,
-                    'user_id' => $request->user_id,
-                    'installation_date' => $request->installation_date,
-                    'warrantee_date' => $request->warrantee_date,
-                    'purchase_date' => $request->purchase_date,
-                    'owner_name' => $request->owner_name,
-                    'city' => $request->city,
-                    'street' => $request->street,
-                    'zip' => $request->zip,
-                    'tool_id' => $request->tool_id,
-                    'MAC' => '',
-                    'access_to_wifi' => false,
-                ]
-            );
+            if (Auth::user()->hasAnyRole(['Organizer', 'Servicer'])) {
+                if (isset($request->purchase_date) && !is_null($request->purchase_date)) {
+                    $request->purchase_date = Carbon::createFromFormat('Y-m-d', $request->purchase_date);
+                    if ($request->purchase_date->diffInMonths() > 3) {
+                        DB::rollback();
+                        return redirect()->back()->withInput()->with('error', __('A vásárlástól számított 3 hónapos garanciális időszakot meghaladta.'));
+                    }
+                }
+
+                $product = Product::create(
+                    [
+                        'serial_number' => $request->serial_number,
+                        'user_id' => $request->user_id,
+                        'installation_date' => Carbon::now(),
+                        'purchase_date' => $request->purchase_date,
+                        'warrantee_date' => Carbon::now()->addYear(),
+                        'owner_name' => $request->owner_name,
+                        'city' => $request->city ?? '',
+                        'street' => $request->street ?? '',
+                        'zip' => $request->zip ?? '',
+                        'tool_id' => $request->tool_id,
+                        'MAC' => $request->mac ?? '',
+                        'access_to_wifi' => $request->access_to_wifi ?? 0,
+                    ]
+                );
+            }
+            if (Auth::user()->hasAnyRole(['Admin', 'Operator'])) {
+                $product = Product::create(
+                    [
+                        'serial_number' => $request->serial_number,
+                        'user_id' => $request->user_id,
+                        'installation_date' => $request->installation_date,
+                        'purchase_date' => $request->purchase_date,
+                        'warrantee_date' => $request->warrantee_date,
+                        'owner_name' => $request->owner_name ?? '',
+                        'city' => $request->city ?? '',
+                        'street' => $request->street ?? '',
+                        'zip' => $request->zip ?? '',
+                        'tool_id' => $request->tool_id,
+                        'MAC' => $request->mac ?? '',
+                        'access_to_wifi' => $request->access_to_wifi ?? 0,
+                    ]
+                );
+            }
             Log::create([
                 'user_id' => 1,
                 'what' => 'product.create Product created successfully |' . json_encode($request->all())
@@ -96,6 +125,12 @@ class ProductController extends Controller
                 'user_id' => 1,
                 'what' => 'product.create Product Partial save successfully |' . json_encode($request->all())
             ]);
+            if (Auth::user()->hasAnyRole(['Organizer', 'Servicer'])) {
+                $this->add_no_redirect($product);
+                DB::commit();
+                return redirect()->route('products.myproducts')->with('success', __('Product is installed.'));
+            }
+
             DB::commit();
             return redirect()->route('products.index')->with('success', __('Product created successfully.'));
         } catch (\Throwable $th) {
@@ -238,6 +273,21 @@ class ProductController extends Controller
         $tools = Tool::orderBy('name')->get();
         return redirect()->route('products.edit', ['product' => $product])->with(compact('users', 'tools', 'product', 'partials', 'userVisibility'));
     }
+    public function add_no_redirect(Product $product)
+    {
+        $userId = auth()->user()->id;
+        $userVisibility = Visible::firstOrCreate([
+            'isVisible' => 1,
+            'product_id' => $product->id,
+            'user_id' => $userId,
+        ]);
+        Log::create([
+            'user_id' => 1,
+            'what' => 'product.edit page open/hover'
+        ]);
+        $user = auth()->user();
+        $user->products()->attach($product->id);
+    }
     public function remove(Product $product)
     {
         $userId = auth()->user()->id;
@@ -255,7 +305,7 @@ class ProductController extends Controller
         $user->products()->detach($product->id);
         return redirect()->route('products.myproducts')->with('success', __('Succesfuly removed the product from your account.'));
     }
-    public function search()
+    public function search(): View
     {
         return view('product.search');
     }

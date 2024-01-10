@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         $roles = ['Admin', 'Operator', 'Servicer', 'Organizer'];
         $permissions = [
             'products.list' => 'Admin|Operator',
-            'products.create' => 'Admin|Operator',
+            'products.create' => 'Admin|Operator|Organizer',
             'products.update' => 'Admin|Operator|Servicer|organizer',
             'products.delete' => 'Admin|Operator',
             'organizations.list' => 'Admin|Operator',
@@ -60,6 +60,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
             'password' => '1234',
             'remember_token' => Str::random(10),
+            'organization_id' => 1,
         ]);
         $user1 = User::factory()->create([
             'name' => 'Test User',
@@ -86,7 +87,7 @@ class DatabaseSeeder extends Seeder
             'organization_id' => 1
         ]);
 
-        $admin->assignRole('Admin');
+        $admin->assignRole('Organizer');
         $user1->assignRole('Operator');
         $user2->assignRole('Organizer');
         $user3->assignRole('Servicer');

@@ -14,6 +14,7 @@ class Organization extends Model
         'name',
         'city',
         'address',
+        'tax_number',
         'zip',
     ];
     public function users(): HasMany
@@ -24,5 +25,4 @@ class Organization extends Model
     {
         return $this->hasManyThrough(Product::class, User::class);
     }
-
 }

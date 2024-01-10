@@ -91,6 +91,7 @@ class OrganizationController extends Controller
                 [
                     'name' => $request->name,
                     'address' => $request->address,
+                    'city' => $request->city,
                     'tax_number' => $request->tax_number,
                     'zip' => $request->zip,
                 ]

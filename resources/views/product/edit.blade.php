@@ -37,8 +37,15 @@
                                             :disabled="true">
                                             {{ $product->serial_number }}
                                         </x-create-input-text>
-
-                                        <x-create-input-text name="city" headText="City" :type="!$userVisibility ?? 'hidden'">
+                                        <x-create-input-text name="mac" headText="MAC" :required="false">
+                                            {{ $product->mac }}
+                                        </x-create-input-text>
+                                        <x-radio name="access_to_wifi" headText="Access to wifi" :required="false"
+                                            :product="$product">
+                                            True,False
+                                        </x-radio>
+                                        <x-create-input-text name="city" headText="City" :type="!$userVisibility ?? 'hidden'"
+                                            :required="false">
                                             {{ $product->city }}
                                         </x-create-input-text>
 
@@ -76,7 +83,7 @@
                                             {{ $product->zip }}
                                         </x-create-input-text>
                                     @endrole
-                                    <x-create-input-text name="owner_name" :disabled="true" headText="Owner name"
+                                    <x-create-input-text name="owner_name" :disabled="Auth::user()->hasAnyRole('Organizer', 'Servicer') ?? false" headText="Owner name"
                                         :type="!$userVisibility ?? 'hidden'">
                                         {{ $product->owner_name }}
                                     </x-create-input-text>
@@ -103,7 +110,7 @@
                                         <div class="col-span-full">
                                             <label
                                                 class="my-5 block text-left text-sm font-medium leading-6 text-gray-900"
-                                                for="purchase_date">
+                                                for="installation_date">
                                                 <span style="color:red;">*</span>
                                                 {{ __('Installation date') }}
                                             </label>
@@ -206,7 +213,8 @@
                             </header>
                             <form class="mt-6 space-y-6" method="POST" action="{{ route('productlogs.store') }}">
                                 @csrf
-                                <input id="product_id" name="product_id" type="hidden" value="{{ $product->id }}">
+                                <input id="product_id" name="product_id" type="hidden"
+                                    value="{{ $product->id }}">
                                 <div class="mb-4">
                                     <x-select-input name="what" headText="Operation type">
                                         <x-select-input-option value="installation">

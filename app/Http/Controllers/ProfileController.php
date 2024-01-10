@@ -32,7 +32,7 @@ class ProfileController extends Controller
         DB::beginTransaction();
         try {
             $validated = $request->validated();
-            User::createOrFirst(
+            $user = User::createOrFirst(
                 [
                     'name' => $validated['name'],
                     'email' => $validated['email'],
@@ -40,6 +40,7 @@ class ProfileController extends Controller
                     'organization_id' => $validated['organization_id'],
                 ]
             );
+            $user->assignRole('Organization');
             $success = __('Successfully created the user.');
             DB::commit();
             return redirect()->route('users.index')->with(compact('success'));
